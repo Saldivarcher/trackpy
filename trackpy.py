@@ -1,4 +1,8 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture('videos/green_screen.mp4')
+camera = cv2.VideoCapture('videos/green_screen.mp4')
+
+while True:
+    (grabbed, frame) = camera.read()
+    
