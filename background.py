@@ -1,8 +1,17 @@
 import numpy as np
 import imutils
 import cv2
+from pathlib import Path
 
-camera = cv2.VideoCapture('videos/green_screen.mp4')
+filename = input("Please enter the path of the video: ")
+filecheck = Path(filename)
+
+while not filecheck.is_file():
+	print ("Sorry, that file doesn't exist.\n")
+	filename = input("Please enter a valid path: ")
+	filecheck = Path(filename)
+
+camera = cv2.VideoCapture(filename)
 clear_green = cv2.bgsegm.createBackgroundSubtractorMOG()
 
 # grab the color green
