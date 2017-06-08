@@ -1,8 +1,8 @@
-import numpy as np
-import imutils
 import cv2
 import sys
+import subprocess
 from pathlib import Path
+import json
 
 
 """
@@ -11,7 +11,6 @@ from pathlib import Path
 """
 def get_filename():
     filename = ""
-
     if len(sys.argv) <= 1:
         filename = "./videos/green_screen.mp4"
         filecheck = Path(filename)
@@ -30,13 +29,11 @@ def get_filename():
 def track(filename):
     # uses the MIL tracking algorithm
     tracker = cv2.Tracker_create("MIL")
-
     camera = cv2.VideoCapture(filename)
 
     # grab the color green
     green_lower = (50, 110, 50)
     green_upper = (255, 140, 255)
-
 
     (grabbed, frame) = camera.read()
 
@@ -44,6 +41,8 @@ def track(filename):
     # around the object of their choice
     bbox = cv2.selectROI(frame, False)
 
+    x_axis = list()
+    y_axis = list()
     # inits the tracker algo to start
     grabbed = tracker.init(frame, bbox)
     while True:
@@ -57,19 +56,27 @@ def track(filename):
         frame = cv2.bitwise_and(frame, frame, mask= mask)
 
         grabbed, bbox = tracker.update(frame)
-
         if grabbed:
             p1 = (int(bbox[0])) , int(bbox[1])
             p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
             cv2.rectangle(frame, p1, p2, (0,0,255))
+            x_axis.append(p1[0])
+            y_axis.append(p1[1])
+            
 
         #this is what plays the video
         cv2.imshow("New", frame)
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
             break
+    
+    cv2.destroyWindow("New")
+    str_x = json.dumps(x_axis)
+    str_y = json.dumps(y_axis)
 
+    s2_out = subprocess.call("python3 graphing.py " + str_x + " " + str_y, shell=True)
 
+    
 """
  Main of the program
 """
