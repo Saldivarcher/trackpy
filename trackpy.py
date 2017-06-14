@@ -3,6 +3,7 @@ import sys
 import subprocess
 from pathlib import Path
 import json
+import numpy
 
 
 """
@@ -24,13 +25,11 @@ def get_filename():
                 filecheck = Path(filename)
     return filename
 
-
-
 def track(filename):
     # uses the MIL tracking algorithm
     tracker = cv2.Tracker_create("MIL")
     camera = cv2.VideoCapture(filename)
-
+        
     # grab the color green
     green_lower = (50, 110, 50)
     green_upper = (255, 140, 255)
