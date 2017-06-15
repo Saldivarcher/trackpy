@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import sys
 import json
 import re
+import numpy as np
 
 #def plot(x_axis, y_axis):
 
@@ -35,5 +36,16 @@ if __name__ == '__main__':
             i = re.sub('[,\[\]]', '', i)
             y.append(int(i))
 
-    plt.plot()
-    
+    t = []
+    for i in range(len(x)):
+    	t.append(i)
+
+
+    x = np.array(x)
+    y = np.array(y)
+    t = np.array(t)
+
+    plt.plot(t, x, 'b', label='x line')
+    plt.plot(t, y, 'g', label='y line')
+    plt.show()
+

@@ -33,9 +33,14 @@ def track(filename):
     # grab the color green
     green_lower = (50, 110, 50)
     green_upper = (255, 140, 255)
-
+    frame_count = 0
     (grabbed, frame) = camera.read()
-
+    while grabbed:
+        frame_count = frame_count + 1
+        if frame_count < 10:
+            (grabbed, frame) = camera.read()
+        else:
+            break
     # allows the user to create a specfied bounding box
     # around the object of their choice
     bbox = cv2.selectROI(frame, False)
@@ -46,7 +51,6 @@ def track(filename):
     grabbed = tracker.init(frame, bbox)
     while True:
         (grabbed, frame) = camera.read()
-
         #print (frame[10, 10])
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(frame, green_lower, green_upper)
